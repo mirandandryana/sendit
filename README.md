@@ -250,3 +250,30 @@ contract MinMax {
         return (minValue, maxValue);
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract DailyCounter {
+    mapping(address => uint256) public lastDay;
+    mapping(address => uint256) public dailyCount;
+
+    event Counted(address indexed user, uint256 count);
+
+    function count() external {
+        uint256 today = block.timestamp / 1 days;
+
+        if (lastDay[msg.sender] != today) {
+            lastDay[msg.sender] = today;
+            dailyCount[msg.sender] = 0;
+        }
+
+        dailyCount[msg.sender] += 1;
+        emit Counted(msg.sender, dailyCount[msg.sender]);
+    }
+
+    function getDailyCount(address user) external view returns (uint256) {
+        uint256 today = block.timestamp / 1 days;
+        if (lastDay[user] != today) return 0;
+        return dailyCount[user];
+    }
+}
