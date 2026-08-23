@@ -129,3 +129,28 @@ contract Ownership {
         owner = address(0);
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract StructStore {
+    struct User {
+        string name;
+        uint256 age;
+        bool registered;
+    }
+
+    mapping(address => User) public users;
+
+    event UserRegistered(address indexed user, string name, uint256 age);
+
+    function register(string calldata name, uint256 age) external {
+        require(!users[msg.sender].registered, "Already registered");
+        users[msg.sender] = User(name, age, true);
+        emit UserRegistered(msg.sender, name, age);
+    }
+
+    function getUser(address user) external view returns (string memory, uint256, bool) {
+        User memory u = users[user];
+        return (u.name, u.age, u.registered);
+    }
+}
