@@ -225,3 +225,28 @@ contract ListManager {
         return addresses;
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract MinMax {
+    uint256 public minValue = type(uint256).max;
+    uint256 public maxValue;
+    uint256 public totalSubmissions;
+
+    event ValueSubmitted(address indexed user, uint256 value);
+
+    function submit(uint256 value) external {
+        if (value < minValue) {
+            minValue = value;
+        }
+        if (value > maxValue) {
+            maxValue = value;
+        }
+        totalSubmissions += 1;
+        emit ValueSubmitted(msg.sender, value);
+    }
+
+    function getMinMax() external view returns (uint256, uint256) {
+        return (minValue, maxValue);
+    }
+}
