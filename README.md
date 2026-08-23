@@ -77,3 +77,26 @@ contract MessageBoard {
         emit NewMessage(msg.sender, message);
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Vote {
+    uint256 public yesVotes;
+    uint256 public noVotes;
+    mapping(address => bool) public hasVoted;
+
+    event Voted(address indexed voter, bool support);
+
+    function vote(bool support) external {
+        require(!hasVoted[msg.sender], "Already voted");
+        hasVoted[msg.sender] = true;
+
+        if (support) {
+            yesVotes += 1;
+        } else {
+            noVotes += 1;
+        }
+
+        emit Voted(msg.sender, support);
+    }
+}
