@@ -60,3 +60,20 @@ contract OwnableCounter {
         owner = newOwner;
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract MessageBoard {
+    string public lastMessage;
+    address public lastAuthor;
+    uint256 public messageCount;
+
+    event NewMessage(address indexed author, string message);
+
+    function postMessage(string calldata message) external {
+        lastMessage = message;
+        lastAuthor = msg.sender;
+        messageCount += 1;
+        emit NewMessage(msg.sender, message);
+    }
+}
