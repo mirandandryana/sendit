@@ -154,3 +154,32 @@ contract StructStore {
         return (u.name, u.age, u.registered);
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract TodoList {
+    struct Todo {
+        string text;
+        bool completed;
+    }
+
+    mapping(address => Todo[]) public todos;
+
+    event TodoAdded(address indexed user, uint256 index, string text);
+    event TodoCompleted(address indexed user, uint256 index);
+
+    function addTodo(string calldata text) external {
+        todos[msg.sender].push(Todo(text, false));
+        emit TodoAdded(msg.sender, todos[msg.sender].length - 1, text);
+    }
+
+    function completeTodo(uint256 index) external {
+        require(index < todos[msg.sender].length, "Invalid index");
+        todos[msg.sender][index].completed = true;
+        emit TodoCompleted(msg.sender, index);
+    }
+
+    function getTodosCount() external view returns (uint256) {
+        return todos[msg.sender].length;
+    }
+}
