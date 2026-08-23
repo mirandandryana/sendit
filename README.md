@@ -199,3 +199,29 @@ contract KeyValue {
         return store[key];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract ListManager {
+    address[] public addresses;
+    mapping(address => bool) public exists;
+
+    event AddressAdded(address indexed account);
+    event AddressRemoved(address indexed account);
+
+    function addAddress(address account) external {
+        require(account != address(0), "Invalid address");
+        require(!exists[account], "Already exists");
+        addresses.push(account);
+        exists[account] = true;
+        emit AddressAdded(account);
+    }
+
+    function getCount() external view returns (uint256) {
+        return addresses.length;
+    }
+
+    function getAll() external view returns (address[] memory) {
+        return addresses;
+    }
+}
