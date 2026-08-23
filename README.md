@@ -15,3 +15,12 @@ Base ha crecido gracias a:
 - Comunidades activas de builders
 
 Es un entorno excelente para construir y experimentar.
+
+# Stack recomendado
+
+- Solidity
+- Foundry o Hardhat
+- Base Mainnet (8453) o Base Sepolia
+- BaseScan para verificar contratos
+
+Construyamos en público.
