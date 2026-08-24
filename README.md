@@ -313,3 +313,28 @@ contract SimpleEscrow {
         emit Released(payee, amount);
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract SimpleRegistry {
+    mapping(string => address) public registry;
+
+    event Registered(string name, address indexed account);
+    event Unregistered(string name);
+
+    function register(string calldata name) external {
+        require(registry[name] == address(0), "Name already taken");
+        registry[name] = msg.sender;
+        emit Registered(name, msg.sender);
+    }
+
+    function unregister(string calldata name) external {
+        require(registry[name] == msg.sender, "Not owner of name");
+        delete registry[name];
+        emit Unregistered(name);
+    }
+
+    function resolve(string calldata name) external view returns (address) {
+        return registry[name];
+    }
+}
