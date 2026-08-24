@@ -277,3 +277,39 @@ contract DailyCounter {
         return dailyCount[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract SimpleEscrow {
+    address public payer;
+    address public payee;
+    uint256 public amount;
+    bool public funded;
+    bool public released;
+
+    event Funded(address indexed from, uint256 amount);
+    event Released(address indexed to, uint256 amount);
+
+    constructor(address _payee) {
+        payer = msg.sender;
+        payee = _payee;
+    }
+
+    function fund() external payable {
+        require(msg.sender == payer, "Only payer");
+        require(!funded, "Already funded");
+        require(msg.value > 0, "Must send ETH");
+        amount = msg.value;
+        funded = true;
+        emit Funded(msg.sender, msg.value);
+    }
+
+    function release() external {
+        require(msg.sender == payer, "Only payer");
+        require(funded && !released, "Cannot release");
+        released = true;
+        (bool success, ) = payee.call{value: amount}("");
+        require(success, "Transfer failed");
+        emit Released(payee, amount);
+    }
+}
