@@ -358,3 +358,25 @@ contract HashStore {
         return hashes[user] == hash;
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract IdGenerator {
+    uint256 public nextId = 1;
+    mapping(address => uint256) public userIds;
+
+    event IdAssigned(address indexed user, uint256 id);
+
+    function generateId() external returns (uint256) {
+        require(userIds[msg.sender] == 0, "Already has ID");
+        uint256 id = nextId;
+        nextId += 1;
+        userIds[msg.sender] = id;
+        emit IdAssigned(msg.sender, id);
+        return id;
+    }
+
+    function getId(address user) external view returns (uint256) {
+        return userIds[user];
+    }
+}
