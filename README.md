@@ -380,3 +380,22 @@ contract IdGenerator {
         return userIds[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract BalanceSnapshot {
+    mapping(address => uint256) public snapshots;
+    mapping(address => uint256) public snapshotTime;
+
+    event SnapshotTaken(address indexed user, uint256 balance, uint256 timestamp);
+
+    function takeSnapshot() external {
+        snapshots[msg.sender] = msg.sender.balance;
+        snapshotTime[msg.sender] = block.timestamp;
+        emit SnapshotTaken(msg.sender, msg.sender.balance, block.timestamp);
+    }
+
+    function getSnapshot(address user) external view returns (uint256 balance, uint256 timestamp) {
+        return (snapshots[user], snapshotTime[user]);
+    }
+}
