@@ -484,4 +484,24 @@ contract Config {
         publicMint = _publicMint;
         emit ConfigUpdated(_maxSupply, _feePercent, _publicMint);
     }
+}// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract DataFeed {
+    int256 public value;
+    uint256 public updatedAt;
+    address public updater;
+
+    event ValueUpdated(int256 newValue, uint256 timestamp);
+
+    function updateValue(int256 newValue) external {
+        value = newValue;
+        updatedAt = block.timestamp;
+        updater = msg.sender;
+        emit ValueUpdated(newValue, block.timestamp);
+    }
+
+    function getData() external view returns (int256, uint256, address) {
+        return (value, updatedAt, updater);
+    }
 }
