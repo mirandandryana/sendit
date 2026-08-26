@@ -399,3 +399,24 @@ contract BalanceSnapshot {
         return (snapshots[user], snapshotTime[user]);
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Version {
+    string public version = "1.0.0";
+    address public updater;
+    uint256 public updatedAt;
+
+    event VersionUpdated(string newVersion, address indexed by);
+
+    function updateVersion(string calldata newVersion) external {
+        version = newVersion;
+        updater = msg.sender;
+        updatedAt = block.timestamp;
+        emit VersionUpdated(newVersion, msg.sender);
+    }
+
+    function getVersionInfo() external view returns (string memory, address, uint256) {
+        return (version, updater, updatedAt);
+    }
+}
