@@ -434,4 +434,24 @@ contract EventLogger {
     function logNumber(uint256 number) external {
         emit NumberLog(msg.sender, number, block.timestamp);
     }
+}// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract StringStore {
+    string public data;
+    address public lastEditor;
+    uint256 public editCount;
+
+    event DataUpdated(string newData, address indexed editor);
+
+    function setData(string calldata newData) external {
+        data = newData;
+        lastEditor = msg.sender;
+        editCount += 1;
+        emit DataUpdated(newData, msg.sender);
+    }
+
+    function getInfo() external view returns (string memory, address, uint256) {
+        return (data, lastEditor, editCount);
+    }
 }
