@@ -420,3 +420,18 @@ contract Version {
         return (version, updater, updatedAt);
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract EventLogger {
+    event Log(address indexed sender, string message, uint256 timestamp);
+    event NumberLog(address indexed sender, uint256 number, uint256 timestamp);
+
+    function logMessage(string calldata message) external {
+        emit Log(msg.sender, message, block.timestamp);
+    }
+
+    function logNumber(uint256 number) external {
+        emit NumberLog(msg.sender, number, block.timestamp);
+    }
+}
