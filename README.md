@@ -455,3 +455,33 @@ contract StringStore {
         return (data, lastEditor, editCount);
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Config {
+    address public owner;
+    uint256 public maxSupply;
+    uint256 public feePercent;
+    bool public publicMint;
+
+    event ConfigUpdated(uint256 maxSupply, uint256 feePercent, bool publicMint);
+
+    constructor() {
+        owner = msg.sender;
+        maxSupply = 10000;
+        feePercent = 5;
+        publicMint = false;
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Not owner");
+        _;
+    }
+
+    function updateConfig(uint256 _maxSupply, uint256 _feePercent, bool _publicMint) external onlyOwner {
+        maxSupply = _maxSupply;
+        feePercent = _feePercent;
+        publicMint = _publicMint;
+        emit ConfigUpdated(_maxSupply, _feePercent, _publicMint);
+    }
+}
