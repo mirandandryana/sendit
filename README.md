@@ -547,3 +547,37 @@ contract TextBoard {
         return messages.length;
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Waitlist {
+    address[] public list;
+    mapping(address => bool) public isListed;
+    uint256 public maxSize;
+
+    event Joined(address indexed user, uint256 position);
+
+    constructor(uint256 _maxSize) {
+        maxSize = _maxSize;
+    }
+
+    function join() external {
+        require(!isListed[msg.sender], "Already in list");
+        require(list.length < maxSize, "Waitlist full");
+        list.push(msg.sender);
+        isListed[msg.sender] = true;
+        emit Joined(msg.sender, list.length - 1);
+    }
+
+    function getPosition(address user) external view returns (uint256) {
+        require(isListed[user], "Not in list");
+        for (uint256 i = 0; i < list.length; i++) {
+            if (list[i] == user) return i;
+        }
+        revert("Not found");
+    }
+
+    function getLength() external view returns (uint256) {
+        return list.length;
+    }
+}
