@@ -581,3 +581,32 @@ contract Waitlist {
         return list.length;
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract PriceTag {
+    mapping(string => uint256) public prices;
+    address public owner;
+
+    event PriceSet(string item, uint256 price);
+
+    constructor() {
+        owner = msg.sender;
+    }
+
+    function setPrice(string calldata item, uint256 price) external {
+        require(msg.sender == owner, "Not owner");
+        prices[item] = price;
+        emit PriceSet(item, price);
+    }
+
+    function getPrice(string calldata item) external view returns (uint256) {
+        return prices[item];
+    }
+
+    function removePrice(string calldata item) external {
+        require(msg.sender == owner, "Not owner");
+        delete prices[item];
+        emit PriceSet(item, 0);
+    }
+}
