@@ -522,4 +522,28 @@ contract BatchIncrement {
     function getCount(address user) external view returns (uint256) {
         return counts[user];
     }
+}// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract TextBoard {
+    string[] public messages;
+    address[] public authors;
+
+    event MessagePosted(address indexed author, string message, uint256 index);
+
+    function post(string calldata message) external {
+        require(bytes(message).length > 0, "Empty message");
+        messages.push(message);
+        authors.push(msg.sender);
+        emit MessagePosted(msg.sender, message, messages.length - 1);
+    }
+
+    function getMessage(uint256 index) external view returns (string memory, address) {
+        require(index < messages.length, "Invalid index");
+        return (messages[index], authors[index]);
+    }
+
+    function getMessageCount() external view returns (uint256) {
+        return messages.length;
+    }
 }
