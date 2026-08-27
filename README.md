@@ -610,3 +610,28 @@ contract PriceTag {
         emit PriceSet(item, 0);
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract SimpleOracle {
+    address public owner;
+    int256 public price;
+    uint256 public lastUpdate;
+
+    event PriceUpdated(int256 newPrice, uint256 timestamp);
+
+    constructor() {
+        owner = msg.sender;
+    }
+
+    function updatePrice(int256 newPrice) external {
+        require(msg.sender == owner, "Not owner");
+        price = newPrice;
+        lastUpdate = block.timestamp;
+        emit PriceUpdated(newPrice, block.timestamp);
+    }
+
+    function getPrice() external view returns (int256, uint256) {
+        return (price, lastUpdate);
+    }
+}
