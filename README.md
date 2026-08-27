@@ -505,3 +505,21 @@ contract DataFeed {
         return (value, updatedAt, updater);
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract BatchIncrement {
+    mapping(address => uint256) public counts;
+
+    event Incremented(address indexed user, uint256 times, uint256 newTotal);
+
+    function increment(uint256 times) external {
+        require(times > 0 && times <= 100, "Invalid times");
+        counts[msg.sender] += times;
+        emit Incremented(msg.sender, times, counts[msg.sender]);
+    }
+
+    function getCount(address user) external view returns (uint256) {
+        return counts[user];
+    }
+}
