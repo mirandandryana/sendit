@@ -659,3 +659,30 @@ contract TimestampLog {
         return timestamps.length;
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract MessageQueue {
+    string[] private queue;
+    uint256 public head;
+
+    event MessageEnqueued(string message, uint256 index);
+    event MessageDequeued(string message);
+
+    function enqueue(string calldata message) external {
+        queue.push(message);
+        emit MessageEnqueued(message, queue.length - 1);
+    }
+
+    function dequeue() external returns (string memory) {
+        require(head < queue.length, "Queue empty");
+        string memory message = queue[head];
+        head += 1;
+        emit MessageDequeued(message);
+        return message;
+    }
+
+    function length() external view returns (uint256) {
+        return queue.length - head;
+    }
+}
