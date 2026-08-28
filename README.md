@@ -716,3 +716,27 @@ contract SimpleTimer {
         emit TimerReset();
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract ValueHistory {
+    uint256[] public values;
+    uint256[] public timestamps;
+
+    event ValueRecorded(uint256 value, uint256 timestamp, uint256 index);
+
+    function record(uint256 value) external {
+        values.push(value);
+        timestamps.push(block.timestamp);
+        emit ValueRecorded(value, block.timestamp, values.length - 1);
+    }
+
+    function getRecord(uint256 index) external view returns (uint256 value, uint256 timestamp) {
+        require(index < values.length, "Invalid index");
+        return (values[index], timestamps[index]);
+    }
+
+    function getCount() external view returns (uint256) {
+        return values.length;
+    }
+}
