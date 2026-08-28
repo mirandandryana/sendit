@@ -686,3 +686,33 @@ contract MessageQueue {
         return queue.length - head;
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract SimpleTimer {
+    uint256 public startTime;
+    uint256 public endTime;
+    address public starter;
+
+    event TimerStarted(address indexed by, uint256 start, uint256 end);
+    event TimerReset();
+
+    function start(uint256 durationInSeconds) external {
+        require(startTime == 0, "Timer already started");
+        startTime = block.timestamp;
+        endTime = block.timestamp + durationInSeconds;
+        starter = msg.sender;
+        emit TimerStarted(msg.sender, startTime, endTime);
+    }
+
+    function isFinished() external view returns (bool) {
+        return block.timestamp >= endTime && endTime != 0;
+    }
+
+    function reset() external {
+        require(msg.sender == starter, "Not starter");
+        startTime = 0;
+        endTime = 0;
+        emit TimerReset();
+    }
+}
