@@ -635,3 +635,27 @@ contract SimpleOracle {
         return (price, lastUpdate);
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract TimestampLog {
+    uint256[] public timestamps;
+    address[] public loggers;
+
+    event Logged(address indexed user, uint256 timestamp, uint256 index);
+
+    function log() external {
+        timestamps.push(block.timestamp);
+        loggers.push(msg.sender);
+        emit Logged(msg.sender, block.timestamp, timestamps.length - 1);
+    }
+
+    function getLog(uint256 index) external view returns (uint256, address) {
+        require(index < timestamps.length, "Invalid index");
+        return (timestamps[index], loggers[index]);
+    }
+
+    function getCount() external view returns (uint256) {
+        return timestamps.length;
+    }
+}
