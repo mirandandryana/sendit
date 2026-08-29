@@ -836,3 +836,29 @@ contract IndexStore {
         return data[index];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Progress {
+    mapping(address => uint256) public progress;
+    uint256 public maxProgress = 100;
+
+    event ProgressUpdated(address indexed user, uint256 value);
+
+    function setProgress(uint256 value) external {
+        require(value <= maxProgress, "Exceeds max");
+        progress[msg.sender] = value;
+        emit ProgressUpdated(msg.sender, value);
+    }
+
+    function addProgress(uint256 amount) external {
+        uint256 newValue = progress[msg.sender] + amount;
+        require(newValue <= maxProgress, "Exceeds max");
+        progress[msg.sender] = newValue;
+        emit ProgressUpdated(msg.sender, newValue);
+    }
+
+    function getProgress(address user) external view returns (uint256) {
+        return progress[user];
+    }
+}
