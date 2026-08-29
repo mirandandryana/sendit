@@ -763,4 +763,31 @@ contract AddressBook {
     function getContact(address owner, string calldata name) external view returns (address) {
         return contacts[owner][name];
     }
+}// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract NoteHistory {
+    struct Note {
+        string text;
+        uint256 timestamp;
+    }
+
+    mapping(address => Note[]) public notes;
+
+    event NoteAdded(address indexed user, string text, uint256 timestamp);
+
+    function addNote(string calldata text) external {
+        notes[msg.sender].push(Note(text, block.timestamp));
+        emit NoteAdded(msg.sender, text, block.timestamp);
+    }
+
+    function getNotesCount(address user) external view returns (uint256) {
+        return notes[user].length;
+    }
+
+    function getNote(address user, uint256 index) external view returns (string memory, uint256) {
+        require(index < notes[user].length, "Invalid index");
+        Note memory n = notes[user][index];
+        return (n.text, n.timestamp);
+    }
 }
