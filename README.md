@@ -740,3 +740,27 @@ contract ValueHistory {
         return values.length;
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract AddressBook {
+    mapping(address => mapping(string => address)) public contacts;
+
+    event ContactAdded(address indexed owner, string name, address contact);
+    event ContactRemoved(address indexed owner, string name);
+
+    function addContact(string calldata name, address contact) external {
+        require(contact != address(0), "Invalid address");
+        contacts[msg.sender][name] = contact;
+        emit ContactAdded(msg.sender, name, contact);
+    }
+
+    function removeContact(string calldata name) external {
+        delete contacts[msg.sender][name];
+        emit ContactRemoved(msg.sender, name);
+    }
+
+    function getContact(address owner, string calldata name) external view returns (address) {
+        return contacts[owner][name];
+    }
+}
