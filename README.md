@@ -815,3 +815,24 @@ contract CounterHistory {
         return history[index];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract IndexStore {
+    mapping(uint256 => string) public data;
+    uint256 public nextIndex;
+
+    event Stored(uint256 indexed index, string value);
+
+    function store(string calldata value) external returns (uint256) {
+        uint256 index = nextIndex;
+        data[index] = value;
+        nextIndex += 1;
+        emit Stored(index, value);
+        return index;
+    }
+
+    function get(uint256 index) external view returns (string memory) {
+        return data[index];
+    }
+}
