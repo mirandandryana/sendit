@@ -862,3 +862,22 @@ contract Progress {
         return progress[user];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract UserCounter {
+    mapping(address => uint256) public counts;
+    uint256 public globalCount;
+
+    event Counted(address indexed user, uint256 userCount, uint256 globalCount);
+
+    function count() external {
+        counts[msg.sender] += 1;
+        globalCount += 1;
+        emit Counted(msg.sender, counts[msg.sender], globalCount);
+    }
+
+    function getCount(address user) external view returns (uint256) {
+        return counts[user];
+    }
+}
