@@ -791,3 +791,27 @@ contract NoteHistory {
         return (n.text, n.timestamp);
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract CounterHistory {
+    uint256 public count;
+    uint256[] public history;
+
+    event Incremented(uint256 newCount);
+
+    function increment() external {
+        count += 1;
+        history.push(count);
+        emit Incremented(count);
+    }
+
+    function getHistoryLength() external view returns (uint256) {
+        return history.length;
+    }
+
+    function getHistoryAt(uint256 index) external view returns (uint256) {
+        require(index < history.length, "Invalid index");
+        return history[index];
+    }
+}
