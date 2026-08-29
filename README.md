@@ -880,4 +880,22 @@ contract UserCounter {
     function getCount(address user) external view returns (uint256) {
         return counts[user];
     }
+}// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract EventCounter {
+    uint256 public totalEvents;
+    mapping(address => uint256) public userEvents;
+
+    event EventEmitted(address indexed user, uint256 userTotal, uint256 globalTotal);
+
+    function emitEvent() external {
+        totalEvents += 1;
+        userEvents[msg.sender] += 1;
+        emit EventEmitted(msg.sender, userEvents[msg.sender], totalEvents);
+    }
+
+    function getStats(address user) external view returns (uint256 userTotal, uint256 globalTotal) {
+        return (userEvents[user], totalEvents);
+    }
 }
