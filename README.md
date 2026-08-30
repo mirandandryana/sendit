@@ -962,3 +962,25 @@ contract NumberList {
         return numbers.length;
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract StringList {
+    string[] public items;
+
+    event ItemAdded(string item, uint256 index);
+
+    function add(string calldata item) external {
+        items.push(item);
+        emit ItemAdded(item, items.length - 1);
+    }
+
+    function get(uint256 index) external view returns (string memory) {
+        require(index < items.length, "Index out of bounds");
+        return items[index];
+    }
+
+    function length() external view returns (uint256) {
+        return items.length;
+    }
+}
