@@ -899,3 +899,24 @@ contract EventCounter {
         return (userEvents[user], totalEvents);
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract IndexCounter {
+    uint256 public currentIndex;
+    mapping(uint256 => address) public indexOwner;
+
+    event IndexClaimed(uint256 indexed index, address indexed user);
+
+    function claimIndex() external returns (uint256) {
+        uint256 index = currentIndex;
+        currentIndex += 1;
+        indexOwner[index] = msg.sender;
+        emit IndexClaimed(index, msg.sender);
+        return index;
+    }
+
+    function getOwner(uint256 index) external view returns (address) {
+        return indexOwner[index];
+    }
+}
