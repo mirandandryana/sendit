@@ -920,3 +920,26 @@ contract IndexCounter {
         return indexOwner[index];
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract StepLog {
+    mapping(address => uint256[]) public steps;
+
+    event StepsLogged(address indexed user, uint256 amount, uint256 timestamp);
+
+    function logSteps(uint256 amount) external {
+        require(amount > 0, "Amount must be > 0");
+        steps[msg.sender].push(amount);
+        emit StepsLogged(msg.sender, amount, block.timestamp);
+    }
+
+    function getStepsCount(address user) external view returns (uint256) {
+        return steps[user].length;
+    }
+
+    function getStepAt(address user, uint256 index) external view returns (uint256) {
+        require(index < steps[user].length, "Invalid index");
+        return steps[user][index];
+    }
+}
