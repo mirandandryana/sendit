@@ -1012,4 +1012,29 @@ contract Record {
     function getCount() external view returns (uint256) {
         return entries.length;
     }
+}// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Logbook {
+    string[] public logs;
+    address[] public authors;
+    uint256[] public timestamps;
+
+    event Logged(address indexed author, string message, uint256 index);
+
+    function write(string calldata message) external {
+        logs.push(message);
+        authors.push(msg.sender);
+        timestamps.push(block.timestamp);
+        emit Logged(msg.sender, message, logs.length - 1);
+    }
+
+    function getLog(uint256 index) external view returns (string memory, address, uint256) {
+        require(index < logs.length, "Invalid index");
+        return (logs[index], authors[index], timestamps[index]);
+    }
+
+    function count() external view returns (uint256) {
+        return logs.length;
+    }
 }
