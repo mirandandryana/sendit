@@ -1062,3 +1062,32 @@ contract Trace {
         return tracers.length;
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract NoteLog {
+    struct Note {
+        address author;
+        string text;
+        uint256 timestamp;
+    }
+
+    Note[] public notes;
+
+    event NoteAdded(address indexed author, string text, uint256 index);
+
+    function addNote(string calldata text) external {
+        notes.push(Note(msg.sender, text, block.timestamp));
+        emit NoteAdded(msg.sender, text, notes.length - 1);
+    }
+
+    function getNote(uint256 index) external view returns (address, string memory, uint256) {
+        require(index < notes.length, "Invalid index");
+        Note memory n = notes[index];
+        return (n.author, n.text, n.timestamp);
+    }
+
+    function getCount() external view returns (uint256) {
+        return notes.length;
+    }
+}
