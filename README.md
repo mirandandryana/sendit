@@ -1306,3 +1306,27 @@ contract MarkLog {
         return markers.length;
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract StampLog {
+    address[] public stampers;
+    uint256[] public timestamps;
+
+    event Stamped(address indexed user, uint256 timestamp, uint256 index);
+
+    function stamp() external {
+        stampers.push(msg.sender);
+        timestamps.push(block.timestamp);
+        emit Stamped(msg.sender, block.timestamp, stampers.length - 1);
+    }
+
+    function getStamp(uint256 index) external view returns (address, uint256) {
+        require(index < stampers.length, "Invalid index");
+        return (stampers[index], timestamps[index]);
+    }
+
+    function count() external view returns (uint256) {
+        return stampers.length;
+    }
+}
