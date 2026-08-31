@@ -1258,3 +1258,27 @@ contract HitLog {
         return hitters.length;
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract TouchLog {
+    address[] public touchers;
+    uint256[] public timestamps;
+
+    event Touched(address indexed user, uint256 timestamp, uint256 index);
+
+    function touch() external {
+        touchers.push(msg.sender);
+        timestamps.push(block.timestamp);
+        emit Touched(msg.sender, block.timestamp, touchers.length - 1);
+    }
+
+    function getTouch(uint256 index) external view returns (address, uint256) {
+        require(index < touchers.length, "Invalid index");
+        return (touchers[index], timestamps[index]);
+    }
+
+    function count() external view returns (uint256) {
+        return touchers.length;
+    }
+}
