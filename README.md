@@ -1115,3 +1115,27 @@ contract Stamp {
         return stampers.length;
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Beacon {
+    address[] public beacons;
+    uint256[] public timestamps;
+
+    event BeaconLit(address indexed user, uint256 timestamp, uint256 index);
+
+    function light() external {
+        beacons.push(msg.sender);
+        timestamps.push(block.timestamp);
+        emit BeaconLit(msg.sender, block.timestamp, beacons.length - 1);
+    }
+
+    function getBeacon(uint256 index) external view returns (address, uint256) {
+        require(index < beacons.length, "Invalid index");
+        return (beacons[index], timestamps[index]);
+    }
+
+    function count() external view returns (uint256) {
+        return beacons.length;
+    }
+}
