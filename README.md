@@ -1139,3 +1139,27 @@ contract Beacon {
         return beacons.length;
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Flash {
+    address[] public flashers;
+    uint256[] public timestamps;
+
+    event Flashed(address indexed user, uint256 timestamp, uint256 index);
+
+    function flash() external {
+        flashers.push(msg.sender);
+        timestamps.push(block.timestamp);
+        emit Flashed(msg.sender, block.timestamp, flashers.length - 1);
+    }
+
+    function getFlash(uint256 index) external view returns (address, uint256) {
+        require(index < flashers.length, "Invalid index");
+        return (flashers[index], timestamps[index]);
+    }
+
+    function count() external view returns (uint256) {
+        return flashers.length;
+    }
+}
