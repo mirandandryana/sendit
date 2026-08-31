@@ -1163,3 +1163,27 @@ contract Flash {
         return flashers.length;
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract EchoLog {
+    address[] public users;
+    uint256[] public times;
+
+    event Echoed(address indexed user, uint256 timestamp, uint256 index);
+
+    function echo() external {
+        users.push(msg.sender);
+        times.push(block.timestamp);
+        emit Echoed(msg.sender, block.timestamp, users.length - 1);
+    }
+
+    function getEcho(uint256 index) external view returns (address, uint256) {
+        require(index < users.length, "Invalid index");
+        return (users[index], times[index]);
+    }
+
+    function count() external view returns (uint256) {
+        return users.length;
+    }
+}
