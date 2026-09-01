@@ -1473,3 +1473,27 @@ contract MarkTrace {
         return markers.length;
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract SignalTrace {
+    address[] public signalers;
+    uint256[] public timestamps;
+
+    event Signaled(address indexed user, uint256 timestamp, uint256 index);
+
+    function signal() external {
+        signalers.push(msg.sender);
+        timestamps.push(block.timestamp);
+        emit Signaled(msg.sender, block.timestamp, signalers.length - 1);
+    }
+
+    function getSignal(uint256 index) external view returns (address, uint256) {
+        require(index < signalers.length, "Invalid index");
+        return (signalers[index], timestamps[index]);
+    }
+
+    function count() external view returns (uint256) {
+        return signalers.length;
+    }
+}
