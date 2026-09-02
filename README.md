@@ -1569,3 +1569,27 @@ contract ClickMark {
         return clickers.length;
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract TapMark {
+    address[] public tappers;
+    uint256[] public timestamps;
+
+    event Tapped(address indexed user, uint256 timestamp, uint256 index);
+
+    function tap() external {
+        tappers.push(msg.sender);
+        timestamps.push(block.timestamp);
+        emit Tapped(msg.sender, block.timestamp, tappers.length - 1);
+    }
+
+    function getTap(uint256 index) external view returns (address, uint256) {
+        require(index < tappers.length, "Invalid index");
+        return (tappers[index], timestamps[index]);
+    }
+
+    function count() external view returns (uint256) {
+        return tappers.length;
+    }
+}
