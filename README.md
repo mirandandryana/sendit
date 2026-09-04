@@ -1952,3 +1952,27 @@ contract HitMini {
         return hitters.length;
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract MarkMini {
+    address[] public markers;
+    uint256[] public timestamps;
+
+    event Marked(address indexed user, uint256 timestamp, uint256 index);
+
+    function mark() external {
+        markers.push(msg.sender);
+        timestamps.push(block.timestamp);
+        emit Marked(msg.sender, block.timestamp, markers.length - 1);
+    }
+
+    function getMark(uint256 index) external view returns (address, uint256) {
+        require(index < markers.length, "Invalid index");
+        return (markers[index], timestamps[index]);
+    }
+
+    function count() external view returns (uint256) {
+        return markers.length;
+    }
+}
