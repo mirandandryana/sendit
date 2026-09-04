@@ -1928,3 +1928,27 @@ contract TapHit {
         return tappers.length;
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract HitMini {
+    address[] public hitters;
+    uint256[] public timestamps;
+
+    event Hit(address indexed user, uint256 timestamp, uint256 index);
+
+    function hit() external {
+        hitters.push(msg.sender);
+        timestamps.push(block.timestamp);
+        emit Hit(msg.sender, block.timestamp, hitters.length - 1);
+    }
+
+    function getHit(uint256 index) external view returns (address, uint256) {
+        require(index < hitters.length, "Invalid index");
+        return (hitters[index], timestamps[index]);
+    }
+
+    function count() external view returns (uint256) {
+        return hitters.length;
+    }
+}
