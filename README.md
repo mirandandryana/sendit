@@ -2000,3 +2000,27 @@ contract SignalMini {
         return signalers.length;
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract TraceMini {
+    address[] public tracers;
+    uint256[] public timestamps;
+
+    event Traced(address indexed user, uint256 timestamp, uint256 index);
+
+    function trace() external {
+        tracers.push(msg.sender);
+        timestamps.push(block.timestamp);
+        emit Traced(msg.sender, block.timestamp, tracers.length - 1);
+    }
+
+    function getTrace(uint256 index) external view returns (address, uint256) {
+        require(index < tracers.length, "Invalid index");
+        return (tracers[index], timestamps[index]);
+    }
+
+    function count() external view returns (uint256) {
+        return tracers.length;
+    }
+}
