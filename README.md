@@ -2142,3 +2142,27 @@ contract TraceOne {
         return tracers.length;
     }
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract PingOne {
+    address[] public pingers;
+    uint256[] public timestamps;
+
+    event Pinged(address indexed user, uint256 timestamp, uint256 index);
+
+    function ping() external {
+        pingers.push(msg.sender);
+        timestamps.push(block.timestamp);
+        emit Pinged(msg.sender, block.timestamp, pingers.length - 1);
+    }
+
+    function getPing(uint256 index) external view returns (address, uint256) {
+        require(index < pingers.length, "Invalid index");
+        return (pingers[index], timestamps[index]);
+    }
+
+    function count() external view returns (uint256) {
+        return pingers.length;
+    }
+}
